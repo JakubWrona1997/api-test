@@ -10,6 +10,10 @@ namespace restaurant_api.Infrastructure.Context
 {
     public class RestaurantDbContext : DbContext
     {
+        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+        {
+
+        }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Address> Address { get; set; }
         public DbSet<Dish> Dishes { get; set; }
