@@ -27,6 +27,7 @@ namespace restaurant_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructureServices(Configuration);
+            services.AddScoped<IWeatherForecastService, WeatherForecastService>();
             services.AddControllers();
             services.AddCors(options =>
             {
