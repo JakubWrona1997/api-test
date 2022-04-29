@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using restaurant_api.Infrastructure;
+using restaurant_api.Domain.SeedData;
+using restaurant_api.Infrastructure.Context;
 
 namespace restaurant_api
 {
@@ -28,6 +30,8 @@ namespace restaurant_api
         {
             services.AddInfrastructureServices(Configuration);
             services.AddScoped<IWeatherForecastService, WeatherForecastService>();
+            services.AddDbContext<RestaurantDbContext>();
+            services.AddScoped<RestaurantSeeder>();
             services.AddControllers();
             services.AddCors(options =>
             {
@@ -37,8 +41,10 @@ namespace restaurant_api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RestaurantSeeder seeder)
         {
+            seeder.Seed();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

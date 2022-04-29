@@ -30,7 +30,7 @@ namespace restaurant_api.Controllers
         
         [HttpPost]
         [Route("generate")]
-        public ActionResult<IEnumerable<TemperatureRequest>> GenerateCutom([FromQuery]int resultsNumber, [FromBody] TemperatureRequest request)
+        public ActionResult<IEnumerable<TemperatureRequest>> GenerateCutomData([FromQuery]int resultsNumber, [FromBody] TemperatureRequest request)
         {
             if(resultsNumber > 0 && request.MinTemperatureC< request.MaxTemperatureC)
             {
