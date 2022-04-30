@@ -55,5 +55,19 @@ namespace restaurant_api.Controllers
 
             return Ok(restuarantDto);
         }
+        [HttpPost]
+        [Route("create")]
+        public async Task<ActionResult> CreateRestaurant([FromBody]CreateRestaurantDto restaurantDto)
+        {
+            var request = _mapper.Map<Restaurant>(restaurantDto);
+            if(request == null)
+            {
+                return BadRequest();
+            }
+            _dbContext.Restaurants.Add(request);
+            await _dbContext.SaveChangesAsync();
+
+            return Created($"/api/restaurant/{request.Id}", null);
+        }
     }
 }
