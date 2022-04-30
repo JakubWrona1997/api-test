@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using restaurant_api.Infrastructure;
 using restaurant_api.Domain.SeedData;
 using restaurant_api.Infrastructure.Context;
+using System.Reflection;
 
 namespace restaurant_api
 {
@@ -29,8 +30,8 @@ namespace restaurant_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructureServices(Configuration);
-            services.AddScoped<IWeatherForecastService, WeatherForecastService>();
             services.AddDbContext<RestaurantDbContext>();
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<RestaurantSeeder>();
             services.AddControllers();
             services.AddCors(options =>
