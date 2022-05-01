@@ -59,6 +59,10 @@ namespace restaurant_api.Controllers
         [Route("create")]
         public async Task<ActionResult> CreateRestaurant([FromBody]CreateRestaurantDto restaurantDto)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var request = _mapper.Map<Restaurant>(restaurantDto);
             if(request == null)
             {
