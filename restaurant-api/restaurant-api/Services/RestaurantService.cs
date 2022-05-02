@@ -46,11 +46,11 @@ namespace restaurant_api.Services
         }
         public async Task<int> Create(CreateRestaurantDto restaurantDto)
         {
-            var request = _mapper.Map<Restaurant>(restaurantDto);
-            _dbContext.Restaurants.Add(request);
+            var restaurant = _mapper.Map<Restaurant>(restaurantDto);
+            await _dbContext.Restaurants.AddAsync(restaurant);
             await _dbContext.SaveChangesAsync();
 
-            return request.Id;
+            return restaurant.Id;
         }
     }
 }
