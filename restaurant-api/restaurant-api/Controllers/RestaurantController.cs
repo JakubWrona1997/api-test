@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using restaurant_api.Domain.DTOs;
 using restaurant_api.Domain.Entities;
 using restaurant_api.Infrastructure.Context;
+using restaurant_api.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,45 +16,31 @@ namespace restaurant_api.Controllers
     [ApiController]
     public class RestaurantController : ControllerBase
     {
-        private readonly RestaurantDbContext _dbContext;
-        private readonly IMapper _mapper;
+        private readonly IRestaurantService _restaurantService;
 
-        public RestaurantController(RestaurantDbContext dbContext, IMapper mapper)
+        public RestaurantController(IRestaurantService restaurantService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _restaurantService = restaurantService;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
         {
-            var restaurants = await _dbContext
-                .Restaurants
-                .Include(i => i.Address)
-                .Include(i => i.Dishes)
-                .ToListAsync();
+            var restaurantsDto = await _restaurantService.GetAll();
 
-            var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
-
-            return Ok(restaurantsDtos);
+            return Ok(restaurantsDto);
         }
         [HttpGet]
         [Route("{id}")]
         public async Task<ActionResult<RestaurantDto>> GetById([FromRoute]int id)
         {
-            var restaurant = await _dbContext
-                .Restaurants
-                .Include(i => i.Address)
-                .Include(i => i.Dishes)
-                .FirstOrDefaultAsync(x=>x.Id == id);
+            var restaurantDto = await _restaurantService.GetById(id);
 
-            if(restaurant == null)
+            if(restaurantDto == null)
             {
                 return NotFound();
             }
 
-            var restuarantDto = _mapper.Map<RestaurantDto>(restaurant);
-
-            return Ok(restuarantDto);
+            return Ok(restaurantDto);
         }
         [HttpPost]
         [Route("create")]
@@ -63,15 +50,9 @@ namespace restaurant_api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var request = _mapper.Map<Restaurant>(restaurantDto);
-            if(request == null)
-            {
-                return BadRequest();
-            }
-            _dbContext.Restaurants.Add(request);
-            await _dbContext.SaveChangesAsync();
+            var id = await _restaurantService.Create(restaurantDto);
 
-            return Created($"/api/restaurant/{request.Id}", null);
+            return Created($"/api/restaurant/{id}", null);
         }
     }
 }

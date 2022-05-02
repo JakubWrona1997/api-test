@@ -14,6 +14,7 @@ using restaurant_api.Infrastructure;
 using restaurant_api.Domain.SeedData;
 using restaurant_api.Infrastructure.Context;
 using System.Reflection;
+using restaurant_api.Services;
 
 namespace restaurant_api
 {
@@ -33,6 +34,7 @@ namespace restaurant_api
             services.AddDbContext<RestaurantDbContext>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<RestaurantSeeder>();
+            services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddControllers();
             services.AddCors(options =>
             {
