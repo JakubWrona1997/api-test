@@ -54,6 +54,23 @@ namespace restaurant_api.Controllers
 
             return Created($"/api/restaurant/{id}", null);
         }
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult> UpdateRestaurant([FromBody]UpdateRestaurantDto restaurantDto, [FromRoute]int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var update = await _restaurantService.Update(restaurantDto, id);
+            if(update == false)
+            {
+                return NotFound();
+            }
+            
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("{id}")]
         public async Task<ActionResult> Delete([FromRoute]int id)

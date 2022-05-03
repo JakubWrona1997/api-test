@@ -67,5 +67,23 @@ namespace restaurant_api.Services
 
             return true;
         }
+        public async Task<bool> Update(UpdateRestaurantDto updateRestaurantDto,int id)
+        {
+            var restaurant = await _dbContext
+                .Restaurants
+                .FirstOrDefaultAsync(x => x.Id == id);
+            
+            if(restaurant == null)
+            {
+                return false;
+            }
+            restaurant.Name = updateRestaurantDto.Name;
+            restaurant.Description = updateRestaurantDto.Description;
+            restaurant.HasDelivery = updateRestaurantDto.HasDelivery;
+
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
