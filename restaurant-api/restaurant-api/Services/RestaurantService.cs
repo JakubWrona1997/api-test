@@ -47,10 +47,25 @@ namespace restaurant_api.Services
         public async Task<int> Create(CreateRestaurantDto restaurantDto)
         {
             var restaurant = _mapper.Map<Restaurant>(restaurantDto);
-            await _dbContext.Restaurants.AddAsync(restaurant);
+            _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync();
 
             return restaurant.Id;
+        }
+        public async Task<bool> Delete(int id)
+        {
+            var restaurant = await _dbContext
+                .Restaurants
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if(restaurant == null)
+            {
+                return false;
+            }
+
+            _dbContext.Restaurants.Remove(restaurant);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
         }
     }
 }

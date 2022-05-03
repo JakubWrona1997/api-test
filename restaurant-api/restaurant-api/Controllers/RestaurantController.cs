@@ -54,5 +54,16 @@ namespace restaurant_api.Controllers
 
             return Created($"/api/restaurant/{id}", null);
         }
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> Delete([FromRoute]int id)
+        {
+            var isDeleted = await _restaurantService.Delete(id);
+            if(isDeleted == false)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }
