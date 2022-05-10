@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using restaurant_api.Domain.DTOs;
 using restaurant_api.Domain.Entities;
 using restaurant_api.Infrastructure.Context;
@@ -12,11 +13,13 @@ namespace restaurant_api.Services
     {
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<RestaurantService> _logger;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper)
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task<RestaurantDto> GetById(int id)
         {
@@ -54,6 +57,8 @@ namespace restaurant_api.Services
         }
         public async Task<bool> Delete(int id)
         {
+            _logger.LogError($"Restaurant with id: {id} DELETE action invoked");
+
             var restaurant = await _dbContext
                 .Restaurants
                 .FirstOrDefaultAsync(x => x.Id == id);
