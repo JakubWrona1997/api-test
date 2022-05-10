@@ -15,6 +15,7 @@ using restaurant_api.Domain.SeedData;
 using restaurant_api.Infrastructure.Context;
 using System.Reflection;
 using restaurant_api.Services;
+using restaurant_api.Middleware;
 
 namespace restaurant_api
 {
@@ -35,6 +36,7 @@ namespace restaurant_api
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<RestaurantSeeder>();
             services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<ErrorHandlingMiddleware>();
             services.AddControllers();
             services.AddCors(options =>
             {
@@ -52,6 +54,7 @@ namespace restaurant_api
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
