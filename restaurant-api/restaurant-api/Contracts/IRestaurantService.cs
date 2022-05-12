@@ -9,7 +9,7 @@ namespace restaurant_api.Services
         Task<int> Create(CreateRestaurantDto restaurantDto);
         Task<IEnumerable<RestaurantDto>> GetAll();
         Task<RestaurantDto> GetById(int id);
-        Task<bool> Delete(int id);
-        Task<bool> Update(UpdateRestaurantDto updateRestaurantDto, int id);
+        Task Delete(int id);
+        Task Update(UpdateRestaurantDto updateRestaurantDto, int id);
     }
 }

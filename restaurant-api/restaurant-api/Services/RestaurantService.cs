@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using restaurant_api.Domain.DTOs;
 using restaurant_api.Domain.Entities;
+using restaurant_api.Exceptions;
 using restaurant_api.Infrastructure.Context;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace restaurant_api.Services
 
             return restaurant.Id;
         }
-        public async Task<bool> Delete(int id)
+        public async Task Delete(int id)
         {
             _logger.LogError($"Restaurant with id: {id} DELETE action invoked");
 
@@ -64,15 +65,13 @@ namespace restaurant_api.Services
                 .FirstOrDefaultAsync(x => x.Id == id);
             if(restaurant == null)
             {
-                return false;
+                throw new NotFoundException("Restaurant not found");
             }
 
             _dbContext.Restaurants.Remove(restaurant);
             await _dbContext.SaveChangesAsync();
-
-            return true;
         }
-        public async Task<bool> Update(UpdateRestaurantDto updateRestaurantDto,int id)
+        public async Task Update(UpdateRestaurantDto updateRestaurantDto,int id)
         {
             var restaurant = await _dbContext
                 .Restaurants
@@ -80,15 +79,13 @@ namespace restaurant_api.Services
             
             if(restaurant == null)
             {
-                return false;
+                throw new NotFoundException("Restaurant not found");
             }
             restaurant.Name = updateRestaurantDto.Name;
             restaurant.Description = updateRestaurantDto.Description;
             restaurant.HasDelivery = updateRestaurantDto.HasDelivery;
 
             await _dbContext.SaveChangesAsync();
-
-            return true;
         }
     }
 }

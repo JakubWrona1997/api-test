@@ -35,21 +35,12 @@ namespace restaurant_api.Controllers
         {
             var restaurantDto = await _restaurantService.GetById(id);
 
-            if(restaurantDto == null)
-            {
-                return NotFound();
-            }
-
             return Ok(restaurantDto);
         }
         [HttpPost]
         [Route("create")]
         public async Task<ActionResult> CreateRestaurant([FromBody]CreateRestaurantDto restaurantDto)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var id = await _restaurantService.Create(restaurantDto);
 
             return Created($"/api/restaurant/{id}", null);
@@ -58,15 +49,7 @@ namespace restaurant_api.Controllers
         [Route("{id}")]
         public async Task<ActionResult> UpdateRestaurant([FromBody]UpdateRestaurantDto restaurantDto, [FromRoute]int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var update = await _restaurantService.Update(restaurantDto, id);
-            if(update == false)
-            {
-                return NotFound();
-            }
+            await _restaurantService.Update(restaurantDto, id);
             
             return Ok();
         }
@@ -75,11 +58,8 @@ namespace restaurant_api.Controllers
         [Route("{id}")]
         public async Task<ActionResult> Delete([FromRoute]int id)
         {
-            var isDeleted = await _restaurantService.Delete(id);
-            if(isDeleted == false)
-            {
-                return NotFound();
-            }
+            await _restaurantService.Delete(id);
+
             return NoContent();
         }
     }
