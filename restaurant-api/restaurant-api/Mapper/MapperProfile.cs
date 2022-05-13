@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using restaurant_api.Domain.DTOs;
+using restaurant_api.Domain.DTOs.Dish;
+using restaurant_api.Domain.DTOs.Restaurant;
 using restaurant_api.Domain.Entities;
 
 namespace restaurant_api.Mapper
@@ -17,7 +18,10 @@ namespace restaurant_api.Mapper
 
             CreateMap<CreateRestaurantDto, Restaurant>()
                 .ForMember(m => m.Address, c => c.MapFrom(dto => new Address()
-                    { City = dto.City, Street = dto.Street, PostalCode = dto.PostalCode}));
+                { City = dto.City, Street = dto.Street, PostalCode = dto.PostalCode }));
+
+            CreateMap<CreateDishDto, Dish>();
+
         }
     }
 }

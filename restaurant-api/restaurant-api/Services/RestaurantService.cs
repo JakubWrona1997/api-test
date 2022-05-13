@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using restaurant_api.Domain.DTOs;
+using restaurant_api.Domain.DTOs.Restaurant;
 using restaurant_api.Domain.Entities;
 using restaurant_api.Exceptions;
 using restaurant_api.Infrastructure.Context;

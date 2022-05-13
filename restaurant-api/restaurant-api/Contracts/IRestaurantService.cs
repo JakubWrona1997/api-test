@@ -1,4 +1,4 @@
-﻿using restaurant_api.Domain.DTOs;
+﻿using restaurant_api.Domain.DTOs.Restaurant;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

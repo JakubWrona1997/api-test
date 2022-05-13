@@ -16,6 +16,7 @@ using restaurant_api.Infrastructure.Context;
 using System.Reflection;
 using restaurant_api.Services;
 using restaurant_api.Middleware;
+using restaurant_api.Contracts;
 
 namespace restaurant_api
 {
@@ -32,12 +33,17 @@ namespace restaurant_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddInfrastructureServices(Configuration);
+
             services.AddDbContext<RestaurantDbContext>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<RestaurantSeeder>();
+
             services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IDishService, DishService>();
+
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<RequestTimeMiddleware>();
+
             services.AddControllers();
             services.AddCors(options =>
             {
