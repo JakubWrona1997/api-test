@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace restaurant_api.Domain.Entities
 {
-    public record Dish
+    public class Dish
     {
         public int Id { get; set; }
         public string Name { get; set; }

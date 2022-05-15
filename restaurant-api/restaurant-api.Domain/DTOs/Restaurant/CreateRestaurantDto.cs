@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace restaurant_api.Domain.DTOs.Restaurant
 {
-    public class CreateRestaurantDto
+    public record CreateRestaurantDto
     {
         [Required]
         [MaxLength(25)]

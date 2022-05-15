@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace restaurant_api.Domain.DTOs.Dish
+namespace restaurant_api.Domain.Entities
 {
-    public record DishDto
+    public class Role
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
     }
 }

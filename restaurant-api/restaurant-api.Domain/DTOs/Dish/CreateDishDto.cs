@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace restaurant_api.Domain.DTOs.Dish
 {
-    public class CreateDishDto
+    public record CreateDishDto
     {
         [Required]
         public string Name { get; set; }

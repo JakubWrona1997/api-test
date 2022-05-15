@@ -21,6 +21,7 @@ namespace restaurant_api.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
         public async Task<int> Create(int restaurantId, CreateDishDto createDishDto)
         {
             var restaurant = await GetRestaurantById(restaurantId);
@@ -34,6 +35,7 @@ namespace restaurant_api.Services
 
             return dishEntity.Id;
         }
+
         public async Task<IEnumerable<DishDto>> GetAll(int restaurantId)
         {
             var restaurant = await _dbContext.Restaurants
@@ -64,12 +66,14 @@ namespace restaurant_api.Services
 
             return dishDto;
         }
+
         public async Task DeleteAll(int restaurantId)
         {
             var restaurant = await GetRestaurantById(restaurantId);
             _dbContext.RemoveRange(restaurant.Dishes);
             await _dbContext.SaveChangesAsync();
         }
+
         public async Task DeleteById(int restaurantId, int dishId)
         {
             var restaurant = await GetRestaurantById(restaurantId);
@@ -95,8 +99,6 @@ namespace restaurant_api.Services
             }
 
             return restaurant;
-        }
-
-       
+        }    
     }
 }
