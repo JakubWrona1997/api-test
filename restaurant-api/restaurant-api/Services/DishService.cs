@@ -23,11 +23,7 @@ namespace restaurant_api.Services
         }
         public async Task<int> Create(int restaurantId, CreateDishDto createDishDto)
         {
-            var restaurant = _dbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
-            if (restaurant == null)
-            {
-                throw new NotFoundException("Restaurant not found");
-            }
+            var restaurant = await GetRestaurantById(restaurantId);
 
             var dishEntity = _mapper.Map<Dish>(createDishDto);
 
@@ -38,7 +34,6 @@ namespace restaurant_api.Services
 
             return dishEntity.Id;
         }
-
         public async Task<IEnumerable<DishDto>> GetAll(int restaurantId)
         {
             var restaurant = await _dbContext.Restaurants
@@ -57,15 +52,9 @@ namespace restaurant_api.Services
 
         public async Task<DishDto> GetById(int restaurantId, int dishId)
         {
-            var restaurant = await _dbContext.Restaurants
-                .FirstOrDefaultAsync(x => x.Id == restaurantId);
+            var restaurant = await GetRestaurantById(restaurantId);
 
-            if(restaurant == null)
-            {
-                throw new NotFoundException("Restaurant not found");
-            }
-
-            var dish = _dbContext.Dishes.FirstOrDefault(x => x.Id == dishId);
+            var dish = await _dbContext.Dishes.FirstOrDefaultAsync(x => x.Id == dishId);
             if (dish == null || dish.RestaurantId != restaurantId)
             {
                 throw new NotFoundException("Dish not found");
@@ -75,6 +64,39 @@ namespace restaurant_api.Services
 
             return dishDto;
         }
+        public async Task DeleteAll(int restaurantId)
+        {
+            var restaurant = await GetRestaurantById(restaurantId);
+            _dbContext.RemoveRange(restaurant.Dishes);
+            await _dbContext.SaveChangesAsync();
+        }
+        public async Task DeleteById(int restaurantId, int dishId)
+        {
+            var restaurant = await GetRestaurantById(restaurantId);
 
+            var dish = _dbContext.Dishes.FirstOrDefault(x => x.Id == dishId);
+            if (dish == null || dish.RestaurantId != restaurantId)
+            {
+                throw new NotFoundException("Dish not found");
+            }
+
+            _dbContext.Dishes.Remove(dish);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task<Restaurant> GetRestaurantById(int restaurantId)
+        {
+            var restaurant = await _dbContext.Restaurants
+                .FirstOrDefaultAsync(x => x.Id == restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new NotFoundException("Restaurant not found");
+            }
+
+            return restaurant;
+        }
+
+       
     }
 }

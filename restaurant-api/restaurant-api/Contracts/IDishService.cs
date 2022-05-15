@@ -9,5 +9,7 @@ namespace restaurant_api.Contracts
         Task<int> Create(int restaurantId, CreateDishDto createDishDto);
         Task<DishDto> GetById(int restaurantId, int dishId);
         Task<IEnumerable<DishDto>> GetAll (int restaurantId);
+        Task DeleteAll(int restaurantId);
+        Task DeleteById(int restaurantId, int dishId);
     }
 }

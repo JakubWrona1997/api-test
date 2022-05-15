@@ -16,6 +16,7 @@ namespace restaurant_api.Controllers
         {
             _dishService = dishService;
         }
+
         [HttpGet]
         [Route("{dishId}")]
         public async Task<ActionResult<DishDto>> Get([FromRoute] int restaurantId, [FromRoute] int dishId)
@@ -33,13 +34,29 @@ namespace restaurant_api.Controllers
             return Ok(result);
         }
 
-
         [HttpPost]
         public async Task<ActionResult> Post([FromRoute]int restaurantId, [FromBody]CreateDishDto createDishDto)
         {
             var dishId = await _dishService.Create(restaurantId, createDishDto);
 
             return Created($"api/restaurant/{restaurantId}/dish/{dishId}", null);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromRoute] int restaurantId)
+        {
+            await _dishService.DeleteAll(restaurantId);
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("{dishId}")]
+        public async Task<ActionResult> DeleteById([FromRoute] int restaurantId, [FromRoute] int dishId)
+        {
+            await _dishService.DeleteById(restaurantId, dishId);
+
+            return NoContent();
         }
     }
 }
