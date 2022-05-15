@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using restaurant_api.Contracts;
 using restaurant_api.Domain.DTOs.Dish;
 using restaurant_api.Domain.Entities;
 using restaurant_api.Exceptions;
 using restaurant_api.Infrastructure.Context;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace restaurant_api.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<int> CreateDish(int restaurantId, CreateDishDto createDishDto)
+        public async Task<int> Create(int restaurantId, CreateDishDto createDishDto)
         {
             var restaurant = _dbContext.Restaurants.FirstOrDefault(x => x.Id == restaurantId);
             if (restaurant == null)
@@ -36,5 +38,43 @@ namespace restaurant_api.Services
 
             return dishEntity.Id;
         }
+
+        public async Task<IEnumerable<DishDto>> GetAll(int restaurantId)
+        {
+            var restaurant = await _dbContext.Restaurants
+                .Include(x => x.Dishes)
+                .FirstOrDefaultAsync(x => x.Id == restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new NotFoundException("Restaurant not found");
+            }
+
+            var dishesDto = _mapper.Map<List<DishDto>>(restaurant.Dishes);
+
+            return dishesDto;
+        }
+
+        public async Task<DishDto> GetById(int restaurantId, int dishId)
+        {
+            var restaurant = await _dbContext.Restaurants
+                .FirstOrDefaultAsync(x => x.Id == restaurantId);
+
+            if(restaurant == null)
+            {
+                throw new NotFoundException("Restaurant not found");
+            }
+
+            var dish = _dbContext.Dishes.FirstOrDefault(x => x.Id == dishId);
+            if (dish == null || dish.RestaurantId != restaurantId)
+            {
+                throw new NotFoundException("Dish not found");
+            }
+
+            var dishDto = _mapper.Map<DishDto>(dish);
+
+            return dishDto;
+        }
+
     }
 }
