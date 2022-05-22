@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using restaurant_api.Contracts;
 using restaurant_api.Domain.DTOs.User;
 using System.Threading.Tasks;
 
@@ -8,15 +9,19 @@ namespace restaurant_api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        public AccountController()
-        {
+        private readonly IAccountService _accountService;
 
+        public AccountController(IAccountService accountService)
+        {
+            _accountService = accountService;
         }
 
         [HttpPost("register")]
-        public Task<ActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
+        public ActionResult RegisterUser([FromBody] RegisterUserDto registerUserDto)
         {
+            _accountService.RegisterUser(registerUserDto);
 
+            return Ok();
         }
     }
 }

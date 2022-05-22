@@ -40,6 +40,7 @@ namespace restaurant_api
 
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IDishService, DishService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<RequestTimeMiddleware>();
