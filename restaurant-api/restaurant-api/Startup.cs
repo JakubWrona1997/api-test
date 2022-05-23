@@ -19,6 +19,7 @@ using restaurant_api.Middleware;
 using restaurant_api.Contracts;
 using Microsoft.AspNetCore.Identity;
 using restaurant_api.Domain.Entities;
+using FluentValidation.AspNetCore;
 
 namespace restaurant_api
 {
@@ -49,7 +50,7 @@ namespace restaurant_api
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<RequestTimeMiddleware>();
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
             services.AddCors(options =>
             {
                 options.AddPolicy("Open",
