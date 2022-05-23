@@ -17,6 +17,8 @@ using System.Reflection;
 using restaurant_api.Services;
 using restaurant_api.Middleware;
 using restaurant_api.Contracts;
+using Microsoft.AspNetCore.Identity;
+using restaurant_api.Domain.Entities;
 
 namespace restaurant_api
 {
@@ -41,6 +43,8 @@ namespace restaurant_api
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IDishService, DishService>();
             services.AddScoped<IAccountService, AccountService>();
+
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddScoped<ErrorHandlingMiddleware>();
             services.AddScoped<RequestTimeMiddleware>();
