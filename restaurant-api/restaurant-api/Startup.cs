@@ -20,6 +20,9 @@ using restaurant_api.Contracts;
 using Microsoft.AspNetCore.Identity;
 using restaurant_api.Domain.Entities;
 using FluentValidation.AspNetCore;
+using restaurant_api.Settings;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace restaurant_api
 {
@@ -35,6 +38,25 @@ namespace restaurant_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var authenticationSetting = new AuthenticationSettings();
+            Configuration.GetSection("Authentication").Bind(authenticationSetting);
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
+            }).AddJwtBearer(config =>
+            {
+                config.RequireHttpsMetadata = false;
+                config.SaveToken = true;
+                config.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = authenticationSetting.JwtIssuer,
+                    ValidAudience = authenticationSetting.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSetting.JwtKey)),
+                };
+            });
+
             services.AddInfrastructureServices(Configuration);
 
             services.AddDbContext<RestaurantDbContext>();
