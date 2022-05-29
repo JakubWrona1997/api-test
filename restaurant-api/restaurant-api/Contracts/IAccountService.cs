@@ -6,5 +6,6 @@ namespace restaurant_api.Contracts
     public interface IAccountService
     {
         void RegisterUser(RegisterUserDto registerUserDto);
+        string GenerateJwt(LoginUserDto loginUserDto);
     }
 }

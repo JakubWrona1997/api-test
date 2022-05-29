@@ -39,6 +39,9 @@ namespace restaurant_api
         public void ConfigureServices(IServiceCollection services)
         {
             var authenticationSetting = new AuthenticationSettings();
+
+            services.AddSingleton(authenticationSetting);
+
             Configuration.GetSection("Authentication").Bind(authenticationSetting);
             services.AddAuthentication(options =>
             {
@@ -92,6 +95,8 @@ namespace restaurant_api
             }
             app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMiddleware<RequestTimeMiddleware>();
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
