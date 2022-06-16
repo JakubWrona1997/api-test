@@ -23,6 +23,8 @@ using FluentValidation.AspNetCore;
 using restaurant_api.Settings;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using restaurant_api.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace restaurant_api
 {
@@ -67,6 +69,7 @@ namespace restaurant_api
 
             services.AddInfrastructureServices(Configuration);
 
+            services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
             services.AddDbContext<RestaurantDbContext>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<RestaurantSeeder>();
