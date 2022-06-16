@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using restaurant_api.Domain.DTOs.Restaurant;
 using restaurant_api.Services;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace restaurant_api.Controllers
             _restaurantService = restaurantService;
         }
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
         {
             var restaurantsDto = await _restaurantService.GetAll();
