@@ -9,6 +9,7 @@ namespace restaurant_api.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
+    [Authorize]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -18,7 +19,7 @@ namespace restaurant_api.Controllers
             _restaurantService = restaurantService;
         }
         [HttpGet]
-        [Authorize]
+        [Authorize(Policy = "HasNationality")]
         public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
         {
             var restaurantsDto = await _restaurantService.GetAll();
@@ -27,6 +28,7 @@ namespace restaurant_api.Controllers
         }
         [HttpGet]
         [Route("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<RestaurantDto>> GetById([FromRoute]int id)
         {
             var restaurantDto = await _restaurantService.GetById(id);
@@ -35,6 +37,7 @@ namespace restaurant_api.Controllers
         }
         [HttpPost]
         [Route("create")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult> CreateRestaurant([FromBody]CreateRestaurantDto restaurantDto)
         {
             var id = await _restaurantService.Create(restaurantDto);
