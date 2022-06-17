@@ -70,6 +70,7 @@ namespace restaurant_api
             services.AddInfrastructureServices(Configuration);
 
             services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
             services.AddDbContext<RestaurantDbContext>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<RestaurantSeeder>();

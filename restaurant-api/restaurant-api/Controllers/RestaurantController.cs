@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using restaurant_api.Domain.DTOs.Restaurant;
 using restaurant_api.Services;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace restaurant_api.Controllers
@@ -40,7 +41,8 @@ namespace restaurant_api.Controllers
         [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult> CreateRestaurant([FromBody]CreateRestaurantDto restaurantDto)
         {
-            var id = await _restaurantService.Create(restaurantDto);
+            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var id = await _restaurantService.Create(restaurantDto, userId);
 
             return Created($"/api/restaurant/{id}", null);
         }
@@ -48,7 +50,7 @@ namespace restaurant_api.Controllers
         [Route("{id}")]
         public async Task<ActionResult> UpdateRestaurant([FromBody]UpdateRestaurantDto restaurantDto, [FromRoute]int id)
         {
-            await _restaurantService.Update(restaurantDto, id);
+            await _restaurantService.Update(restaurantDto, id, User);
             
             return Ok();
         }
@@ -57,7 +59,7 @@ namespace restaurant_api.Controllers
         [Route("{id}")]
         public async Task<ActionResult> Delete([FromRoute]int id)
         {
-            await _restaurantService.Delete(id);
+            await _restaurantService.Delete(id, User);
 
             return NoContent();
         }
