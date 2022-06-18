@@ -34,6 +34,7 @@ namespace restaurant_api.Services
                 .Include(i => i.Address)
                 .Include(i => i.Dishes)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             if (restaurant == null)
             {
                 return null;
@@ -69,6 +70,7 @@ namespace restaurant_api.Services
             var restaurant = await _dbContext
                 .Restaurants
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             if(restaurant == null)
             {
                 throw new NotFoundException("Restaurant not found");
