@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using restaurant_api.Authorization;
+using restaurant_api.Contracts;
 using restaurant_api.Domain.DTOs.Restaurant;
 using restaurant_api.Domain.Entities;
 using restaurant_api.Exceptions;
@@ -19,13 +20,16 @@ namespace restaurant_api.Services
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<RestaurantService> _logger;
+        private readonly IUserContextService _userContextService;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger, IAuthorizationService authorizationService)
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger, IAuthorizationService authorizationService
+            ,IUserContextService userContextService)
         {
             _authorizationService = authorizationService;
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _userContextService = userContextService;
         }
         public async Task<RestaurantDto> GetById(int id)
         {
@@ -54,16 +58,16 @@ namespace restaurant_api.Services
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
             return restaurantsDtos;
         }
-        public async Task<int> Create(CreateRestaurantDto restaurantDto, int userId)
+        public async Task<int> Create(CreateRestaurantDto restaurantDto)
         {
             var restaurant = _mapper.Map<Restaurant>(restaurantDto);
-            restaurant.CreatedById = userId;
+            restaurant.CreatedById = _userContextService.GetUserId;
             _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync();
 
             return restaurant.Id;
         }
-        public async Task Delete(int id, ClaimsPrincipal user)
+        public async Task Delete(int id)
         {
             _logger.LogError($"Restaurant with id: {id} DELETE action invoked");
 
@@ -76,7 +80,8 @@ namespace restaurant_api.Services
                 throw new NotFoundException("Restaurant not found");
             }
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(user, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, restaurant,
+                new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
 
             if (!authorizationResult.Succeeded)
             {
@@ -86,7 +91,7 @@ namespace restaurant_api.Services
             _dbContext.Restaurants.Remove(restaurant);
             await _dbContext.SaveChangesAsync();
         }
-        public async Task Update(UpdateRestaurantDto updateRestaurantDto,int id, ClaimsPrincipal user)
+        public async Task Update(UpdateRestaurantDto updateRestaurantDto,int id)
         {            
             var restaurant = await _dbContext
                 .Restaurants
@@ -97,7 +102,8 @@ namespace restaurant_api.Services
                 throw new NotFoundException("Restaurant not found");
             }
 
-            var authorizationResult = _authorizationService.AuthorizeAsync(user, restaurant, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+            var authorizationResult = _authorizationService.AuthorizeAsync(_userContextService.User, restaurant,
+                new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
             if (!authorizationResult.Succeeded)
             {

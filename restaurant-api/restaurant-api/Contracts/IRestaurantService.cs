@@ -7,10 +7,10 @@ namespace restaurant_api.Services
 {
     public interface IRestaurantService
     {
-        Task<int> Create(CreateRestaurantDto restaurantDto, int userId);
+        Task<int> Create(CreateRestaurantDto restaurantDto);
         Task<IEnumerable<RestaurantDto>> GetAll();
         Task<RestaurantDto> GetById(int id);
-        Task Delete(int id, ClaimsPrincipal user);
-        Task Update(UpdateRestaurantDto updateRestaurantDto, int id, ClaimsPrincipal user);
+        Task Delete(int id);
+        Task Update(UpdateRestaurantDto updateRestaurantDto, int id);
     }
 }
