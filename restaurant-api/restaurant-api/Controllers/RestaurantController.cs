@@ -20,7 +20,7 @@ namespace restaurant_api.Controllers
             _restaurantService = restaurantService;
         }
         [HttpGet]
-        [Authorize(Policy = "Atleast20")]
+        [Authorize(Policy = "CreateAtLeast2Restaurants")]
         public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
         {
             var restaurantsDto = await _restaurantService.GetAll();
@@ -40,9 +40,8 @@ namespace restaurant_api.Controllers
         [Route("create")]
         [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult> CreateRestaurant([FromBody]CreateRestaurantDto restaurantDto)
-        {
-            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var id = await _restaurantService.Create(restaurantDto, userId);
+        {           
+            var id = await _restaurantService.Create(restaurantDto);
 
             return Created($"/api/restaurant/{id}", null);
         }
@@ -50,7 +49,7 @@ namespace restaurant_api.Controllers
         [Route("{id}")]
         public async Task<ActionResult> UpdateRestaurant([FromBody]UpdateRestaurantDto restaurantDto, [FromRoute]int id)
         {
-            await _restaurantService.Update(restaurantDto, id, User);
+            await _restaurantService.Update(restaurantDto, id);
             
             return Ok();
         }
@@ -59,7 +58,7 @@ namespace restaurant_api.Controllers
         [Route("{id}")]
         public async Task<ActionResult> Delete([FromRoute]int id)
         {
-            await _restaurantService.Delete(id, User);
+            await _restaurantService.Delete(id);
 
             return NoContent();
         }
