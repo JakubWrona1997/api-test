@@ -54,7 +54,7 @@ namespace restaurant_api.Services
                 .Restaurants
                 .Include(i => i.Address)
                 .Include(i => i.Dishes)
-                .Where(r => searchPhrase != null && (r.Name.ToLower().Contains(searchPhrase.ToLower()) ||
+                .Where(r => searchPhrase == null || (r.Name.ToLower().Contains(searchPhrase.ToLower()) ||
                                                      r.Description.ToLower().Contains(searchPhrase.ToLower())))
                 .ToListAsync();
 
