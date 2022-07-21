@@ -8,7 +8,7 @@ namespace restaurant_api.Services
     public interface IRestaurantService
     {
         Task<int> Create(CreateRestaurantDto restaurantDto);
-        Task<IEnumerable<RestaurantDto>> GetAll();
+        Task<IEnumerable<RestaurantDto>> GetAll(string searchPhrase);
         Task<RestaurantDto> GetById(int id);
         Task Delete(int id);
         Task Update(UpdateRestaurantDto updateRestaurantDto, int id);

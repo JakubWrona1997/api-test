@@ -9,6 +9,7 @@ using restaurant_api.Domain.Entities;
 using restaurant_api.Exceptions;
 using restaurant_api.Infrastructure.Context;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -47,12 +48,14 @@ namespace restaurant_api.Services
             var result = _mapper.Map<RestaurantDto>(restaurant);
             return result;
         }
-        public async Task<IEnumerable<RestaurantDto>> GetAll()
+        public async Task<IEnumerable<RestaurantDto>> GetAll(string searchPhrase)
         {
             var restaurants = await _dbContext
                 .Restaurants
                 .Include(i => i.Address)
                 .Include(i => i.Dishes)
+                .Where(r => r.Name.ToLower().Contains(searchPhrase.ToLower()) || 
+                            r.Description.ToLower().Contains(searchPhrase.ToLower()))
                 .ToListAsync();
 
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);

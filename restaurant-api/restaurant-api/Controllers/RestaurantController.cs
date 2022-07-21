@@ -20,10 +20,10 @@ namespace restaurant_api.Controllers
             _restaurantService = restaurantService;
         }
         [HttpGet]
-        [Authorize(Policy = "CreateAtLeast2Restaurants")]
-        public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll()
+        //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
+        public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetAll([FromQuery]string searchPhrase)
         {
-            var restaurantsDto = await _restaurantService.GetAll();
+            var restaurantsDto = await _restaurantService.GetAll(searchPhrase);
 
             return Ok(restaurantsDto);
         }
